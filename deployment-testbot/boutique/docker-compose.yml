@@ -9,8 +9,6 @@
 #
 # Frontend accessible at: http://localhost:8080
 
-version: '3.8'
-
 x-image-registry: &registry "us-central1-docker.pkg.dev/google-samples/microservices-demo"
 x-image-tag: &tag "v0.10.5"
 
@@ -34,6 +32,7 @@ services:
       - SHIPPING_SERVICE_ADDR=shippingservice:50051
       - CHECKOUT_SERVICE_ADDR=checkoutservice:5050
       - AD_SERVICE_ADDR=adservice:9555
+      - SHOPPING_ASSISTANT_SERVICE_ADDR=localhost:0  # Not used — prevents panic on missing env var
       - ENABLE_PROFILER=0
     depends_on:
       cartservice:
