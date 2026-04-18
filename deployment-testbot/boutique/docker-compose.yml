@@ -20,8 +20,8 @@ services:
 
   frontend:
     build:
-      context: ${BOUTIQUE_REPO_PATH:-.}
-      dockerfile: src/frontend/Dockerfile
+      context: ${BOUTIQUE_REPO_PATH:-.}/src/frontend
+      dockerfile: Dockerfile
     container_name: testbot-boutique-frontend
     ports:
       - "8080:8080"
