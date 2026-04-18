@@ -1,0 +1,161 @@
+# Online Boutique — Docker Compose for TestBot Evaluation
+#
+# Runs the full microservices stack locally for UI test generation.
+# Backend services use pre-built v0.10.5 images from Google's registry.
+# Frontend is built from source to pick up PR changes.
+#
+# Usage:
+#   BOUTIQUE_REPO_PATH=/path/to/repo docker compose up -d --build
+#
+# Frontend accessible at: http://localhost:8080
+
+version: '3.8'
+
+x-image-registry: &registry "us-central1-docker.pkg.dev/google-samples/microservices-demo"
+x-image-tag: &tag "v0.10.5"
+
+services:
+
+  # ─── Frontend (built from source — this is the SUT) ───────────────────────
+
+  frontend:
+    build:
+      context: ${BOUTIQUE_REPO_PATH:-.}
+      dockerfile: src/frontend/Dockerfile
+    container_name: testbot-boutique-frontend
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550
+      - CURRENCY_SERVICE_ADDR=currencyservice:7000
+      - CART_SERVICE_ADDR=cartservice:7070
+      - RECOMMENDATION_SERVICE_ADDR=recommendationservice:8080
+      - SHIPPING_SERVICE_ADDR=shippingservice:50051
+      - CHECKOUT_SERVICE_ADDR=checkoutservice:5050
+      - AD_SERVICE_ADDR=adservice:9555
+      - ENABLE_PROFILER=0
+    depends_on:
+      cartservice:
+        condition: service_started
+      productcatalogservice:
+        condition: service_started
+      currencyservice:
+        condition: service_started
+      checkoutservice:
+        condition: service_started
+      shippingservice:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "--header=Cookie: shop_session-id=x-healthcheck", "http://localhost:8080/_healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # ─── Backend services (pre-built images) ──────────────────────────────────
+
+  cartservice:
+    image: "us-central1-docker.pkg.dev/google-samples/microservices-demo/cartservice:v0.10.5"
+    container_name: testbot-boutique-cartservice
+    environment:
+      - REDIS_ADDR=redis-cart:6379
+    depends_on:
+      - redis-cart
+    restart: unless-stopped
+
+  redis-cart:
+    image: redis:alpine
+    container_name: testbot-boutique-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  productcatalogservice:
+    image: "us-central1-docker.pkg.dev/google-samples/microservices-demo/productcatalogservice:v0.10.5"
+    container_name: testbot-boutique-productcatalog
+    environment:
+      - PORT=3550
+      - DISABLE_PROFILER=1
+    restart: unless-stopped
+
+  currencyservice:
+    image: "us-central1-docker.pkg.dev/google-samples/microservices-demo/currencyservice:v0.10.5"
+    container_name: testbot-boutique-currency
+    environment:
+      - PORT=7000
+      - DISABLE_PROFILER=1
+    restart: unless-stopped
+
+  checkoutservice:
+    image: "us-central1-docker.pkg.dev/google-samples/microservices-demo/checkoutservice:v0.10.5"
+    container_name: testbot-boutique-checkout
+    environment:
+      - PORT=5050
+      - PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550
+      - SHIPPING_SERVICE_ADDR=shippingservice:50051
+      - PAYMENT_SERVICE_ADDR=paymentservice:50051
+      - EMAIL_SERVICE_ADDR=emailservice:5000
+      - CURRENCY_SERVICE_ADDR=currencyservice:7000
+      - CART_SERVICE_ADDR=cartservice:7070
+    depends_on:
+      - productcatalogservice
+      - currencyservice
+      - cartservice
+      - shippingservice
+      - paymentservice
+      - emailservice
+    restart: unless-stopped
+
+  paymentservice:
+    image: "us-central1-docker.pkg.dev/google-samples/microservices-demo/paymentservice:v0.10.5"
+    container_name: testbot-boutique-payment
+    environment:
+      - PORT=50051
+      - DISABLE_PROFILER=1
+    restart: unless-stopped
+
+  shippingservice:
+    image: "us-central1-docker.pkg.dev/google-samples/microservices-demo/shippingservice:v0.10.5"
+    container_name: testbot-boutique-shipping
+    environment:
+      - PORT=50051
+      - DISABLE_PROFILER=1
+    restart: unless-stopped
+
+  emailservice:
+    image: "us-central1-docker.pkg.dev/google-samples/microservices-demo/emailservice:v0.10.5"
+    container_name: testbot-boutique-email
+    # NOTE: Container listens on 8080 but checkoutservice expects port 5000.
+    # We use Docker Compose service networking; the container_name resolves
+    # but we need the port to match. The Kubernetes service maps 5000→8080.
+    # In Docker Compose, we expose 5000 and tell the container to listen on 5000.
+    environment:
+      - PORT=5000
+      - DISABLE_PROFILER=1
+    restart: unless-stopped
+
+  recommendationservice:
+    image: "us-central1-docker.pkg.dev/google-samples/microservices-demo/recommendationservice:v0.10.5"
+    container_name: testbot-boutique-recommendation
+    environment:
+      - PORT=8080
+      - PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550
+      - DISABLE_PROFILER=1
+    depends_on:
+      - productcatalogservice
+    restart: unless-stopped
+
+  adservice:
+    image: "us-central1-docker.pkg.dev/google-samples/microservices-demo/adservice:v0.10.5"
+    container_name: testbot-boutique-adservice
+    environment:
+      - PORT=9555
+      - DISABLE_PROFILER=1
+    restart: unless-stopped

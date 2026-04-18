@@ -1,0 +1,10 @@
+# Skyramp workspace config for Online Boutique TestBot evaluation.
+# Points TestBot at the frontend HTTP server for endpoint discovery and testing.
+# The frontend serves HTML pages (server-rendered Go templates) and a small
+# number of JSON/redirect endpoints. There is no REST API — this repo is
+# evaluated for UI test generation only.
+
+api:
+  baseUrl: http://localhost:8080
+
+testDirectory: tests/skyramp
