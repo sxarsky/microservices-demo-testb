@@ -23,27 +23,27 @@
         </span>
     </div>
 
-    <main role="main" class="cart-sections">
+    <main role="main" class="cart-sections" aria-label="Shopping Cart">
 
         {{ if eq (len $.items) 0 }}
-        <section class="empty-cart-section">
+        <section class="empty-cart-section" data-testid="empty-cart">
             <h3>Your shopping cart is empty!</h3>
             <p>Items you add to your shopping cart will appear here.</p>
             <a class="cymbal-button-primary" href="{{ $.baseUrl }}/" role="button">Continue Shopping</a>
         </section>
         {{ else }}
-        <section class="container">
+        <section class="container" data-testid="cart-content">
             <div class="row">
 
                 <div class="col-lg-6 col-xl-5 offset-xl-1 cart-summary-section">
 
                     <div class="row mb-3 py-2">
                         <div class="col-4 pl-md-0">
-                            <h3>Cart ({{ $.cart_size }})</h3>
+                            <h3 data-testid="cart-heading">Cart ({{ $.cart_size }})</h3>
                         </div>
                         <div class="col-8 pr-md-0 text-right">
                             <form method="POST" action="{{ $.baseUrl }}/cart/empty">
-                                <button class="cymbal-button-secondary cart-summary-empty-cart-button" type="submit">
+                                <button class="cymbal-button-secondary cart-summary-empty-cart-button" type="submit" data-testid="empty-cart-btn">
                                     Empty Cart
                                 </button>
                                 <a class="cymbal-button-primary" href="{{ $.baseUrl }}/" role="button">
@@ -209,7 +209,7 @@
 
                         <div class="form-row justify-content-center">
                             <div class="col text-center">
-                                <button class="cymbal-button-primary" type="submit">
+                                <button class="cymbal-button-primary" type="submit" data-testid="place-order-btn">
                                     Place Order
                                 </button>
                             </div>
