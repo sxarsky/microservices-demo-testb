@@ -332,7 +332,9 @@ func (fe *frontendServer) placeOrderHandler(w http.ResponseWriter, r *http.Reque
 		ccMonth, _    = strconv.ParseInt(r.FormValue("credit_card_expiration_month"), 10, 32)
 		ccYear, _     = strconv.ParseInt(r.FormValue("credit_card_expiration_year"), 10, 32)
 		ccCVV, _      = strconv.ParseInt(r.FormValue("credit_card_cvv"), 10, 32)
+		giftMessage   = r.FormValue("gift_message")   // BUG: form field is "giftMsg", not "gift_message"
 	)
+	_ = giftMessage  // Gift message captured but never used in order due to key mismatch
 
 	payload := validator.PlaceOrderPayload{
 		Email:         email,
@@ -389,12 +391,23 @@ func (fe *frontendServer) placeOrderHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
+	// BUG: Always use shipping address as billing, ignoring the "same_as_shipping" checkbox
+	// When checkbox is unchecked, user enters separate billing address, but we still use shipping
+	billingAddress := map[string]string{
+		"street": streetAddress,
+		"city":   city,
+		"state":  state,
+		"zip":    r.FormValue("zip_code"),
+	}
+
 	if err := templates.ExecuteTemplate(w, "order", injectCommonTemplateData(r, map[string]interface{}{
-		"show_currency":   false,
-		"currencies":      currencies,
-		"order":           order.GetOrder(),
-		"total_paid":      &totalPaid,
-		"recommendations": recommendations,
+		"show_currency":    false,
+		"currencies":       currencies,
+		"order":            order.GetOrder(),
+		"total_paid":       &totalPaid,
+		"recommendations":  recommendations,
+		"gift_message":     giftMessage,
+		"billing_address":  billingAddress,
 	})); err != nil {
 		log.Println(err)
 	}
