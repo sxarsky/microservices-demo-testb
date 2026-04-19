@@ -210,25 +210,18 @@ func (fe *frontendServer) productHandler(w http.ResponseWriter, r *http.Request)
 
 func (fe *frontendServer) addToCartHandler(w http.ResponseWriter, r *http.Request) {
 	log := r.Context().Value(ctxKeyLog{}).(logrus.FieldLogger)
-	quantity, _ := strconv.ParseUint(r.FormValue("quantity"), 10, 32)
+	quantity, _ := strconv.Atoi(r.FormValue("quantity"))
 	productID := r.FormValue("product_id")
-	payload := validator.AddToCartPayload{
-		Quantity:  quantity,
-		ProductID: productID,
-	}
-	if err := payload.Validate(); err != nil {
-		renderHTTPError(log, r, w, validator.ValidationErrorResponse(err), http.StatusUnprocessableEntity)
-		return
-	}
-	log.WithField("product", payload.ProductID).WithField("quantity", payload.Quantity).Debug("adding to cart")
 
-	p, err := fe.getProduct(r.Context(), payload.ProductID)
+	log.WithField("product", productID).WithField("quantity", quantity).Debug("adding to cart")
+
+	p, err := fe.getProduct(r.Context(), productID)
 	if err != nil {
 		renderHTTPError(log, r, w, errors.Wrap(err, "could not retrieve product"), http.StatusInternalServerError)
 		return
 	}
 
-	if err := fe.insertCart(r.Context(), sessionID(r), p.GetId(), int32(payload.Quantity)); err != nil {
+	if err := fe.insertCart(r.Context(), sessionID(r), p.GetId(), int32(quantity)); err != nil {
 		renderHTTPError(log, r, w, errors.Wrap(err, "failed to add to cart"), http.StatusInternalServerError)
 		return
 	}
