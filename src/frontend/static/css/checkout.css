@@ -1,0 +1,144 @@
+.checkout-progress {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 0;
+    list-style: none;
+    position: relative;
+}
+
+.checkout-progress::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 50px;
+    right: 50px;
+    height: 2px;
+    background: #ddd;
+    z-index: 0;
+}
+
+.checkout-step-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    flex: 1;
+}
+
+.checkout-step-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #ddd;
+    color: #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+}
+
+.checkout-step-indicator.active .checkout-step-number {
+    background: #d91e63;
+    color: white;
+}
+
+.checkout-step-indicator.completed .checkout-step-number {
+    background: #4caf50;
+    color: white;
+}
+
+.checkout-step-label {
+    font-size: 12px;
+    color: #999;
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+.checkout-step-indicator.active .checkout-step-label {
+    color: #d91e63;
+    font-weight: bold;
+}
+
+.checkout-step-indicator.completed .checkout-step-label {
+    color: #4caf50;
+}
+
+.checkout-step-content {
+    display: none;
+}
+
+.checkout-step-content.active {
+    display: block;
+}
+
+.checkout-nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.checkout-btn-back,
+.checkout-btn-next {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.checkout-btn-back {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.checkout-btn-back:hover {
+    background: #bdbdbd;
+}
+
+.checkout-btn-next {
+    background: #d91e63;
+    color: white;
+}
+
+.checkout-btn-next:hover {
+    background: #c2185b;
+}
+
+.checkout-review-section {
+    background: #f8f8f8;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.checkout-review-section h5 {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.checkout-review-section p {
+    font-size: 14px;
+    margin: 3px 0;
+    color: #333;
+}
+
+.checkout-validation-error {
+    color: #d32f2f;
+    font-size: 12px;
+    margin-top: 4px;
+    display: none;
+}
+
+.checkout-validation-error.show {
+    display: block;
+}
