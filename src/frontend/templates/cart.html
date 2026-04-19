@@ -27,8 +27,8 @@
 
         {{ if eq (len $.items) 0 }}
         <section class="empty-cart-section" data-testid="empty-cart">
-            <h3>Your shopping cart is empty!</h3>
-            <p>Items you add to your shopping cart will appear here.</p>
+            <h3>No items in your cart yet.</h3>
+            <p>Browse our products and add something you love!</p>
             <a class="cymbal-button-primary" href="{{ $.baseUrl }}/" role="button">Continue Shopping</a>
         </section>
         {{ else }}
@@ -39,12 +39,12 @@
 
                     <div class="row mb-3 py-2">
                         <div class="col-4 pl-md-0">
-                            <h3 data-testid="cart-heading">Cart ({{ $.cart_size }})</h3>
+                            <h3 data-testid="cart-heading">Shopping Bag ({{ $.cart_size }})</h3>
                         </div>
                         <div class="col-8 pr-md-0 text-right">
-                            <form method="POST" action="{{ $.baseUrl }}/cart/empty">
-                                <button class="cymbal-button-secondary cart-summary-empty-cart-button" type="submit" data-testid="empty-cart-btn">
-                                    Empty Cart
+                            <form method="POST" action="{{ $.baseUrl }}/cart/clear">
+                                <button class="cymbal-button-secondary cart-summary-clear-cart-button" type="submit" data-testid="empty-cart-btn">
+                                    Clear All Items
                                 </button>
                                 <a class="cymbal-button-primary" href="{{ $.baseUrl }}/" role="button">
                                     Continue Shopping
@@ -210,7 +210,7 @@
                         <div class="form-row justify-content-center">
                             <div class="col text-center">
                                 <button class="cymbal-button-primary" type="submit" data-testid="place-order-btn">
-                                    Place Order
+                                    Complete Purchase
                                 </button>
                             </div>
                         </div>
