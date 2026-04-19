@@ -99,117 +99,184 @@
 
                 <div class="col-lg-5 offset-lg-1 col-xl-4">
 
+                    <!-- Checkout Progress Indicator -->
+                    <div class="checkout-progress" id="checkout-progress">
+                        <div class="checkout-step-indicator active" data-step="0">
+                            <span class="checkout-step-number">1</span>
+                            <span class="checkout-step-label">Shipping</span>
+                        </div>
+                        <div class="checkout-step-indicator" data-step="1">
+                            <span class="checkout-step-number">2</span>
+                            <span class="checkout-step-label">Payment</span>
+                        </div>
+                        <div class="checkout-step-indicator" data-step="2">
+                            <span class="checkout-step-number">3</span>
+                            <span class="checkout-step-label">Review</span>
+                        </div>
+                    </div>
+
                     <form class="cart-checkout-form" action="{{ $.baseUrl }}/cart/checkout" method="POST">
 
-                        <div class="row">
-                            <div class="col">
-                                <h3>Shipping Address</h3>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="col cymbal-form-field">
-                                <label for="email">E-mail Address</label>
-                                <input type="email" id="email"
-                                    name="email" value="someone@example.com" required>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="col cymbal-form-field">
-                                <label for="street_address">Street Address</label>
-                                <input type="text" name="street_address"
-                                    id="street_address" value="1600 Amphitheatre Parkway" required>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="col cymbal-form-field">
-                                <label for="zip_code">Zip Code</label>
-                                <input type="text"
-                                    name="zip_code" id="zip_code" value="94043" required pattern="\d{4,5}">
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="col cymbal-form-field">
-                                <label for="city">City</label>
-                                <input type="text" name="city" id="city"
-                                    value="Mountain View" required>
+                        <!-- Step 1: Shipping Address -->
+                        <div class="checkout-step-content active" id="checkout-step-1" data-step="0">
+                            <div class="row">
+                                <div class="col">
+                                    <h3>Shipping Address</h3>
                                 </div>
                             </div>
 
-                        <div class="form-row">
-                            <div class="col-md-5 cymbal-form-field">
-                                <label for="state">State</label>
-                                <input type="text" name="state" id="state"
-                                    value="CA" required>
+                            <div class="form-row">
+                                <div class="col cymbal-form-field">
+                                    <label for="email">E-mail Address</label>
+                                    <input type="email" id="email"
+                                        name="email" value="someone@example.com" required>
+                                    <div class="checkout-validation-error">Please enter a valid email address</div>
+                                </div>
                             </div>
-                            <div class="col-md-7 cymbal-form-field">
-                                <label for="country">Country</label>
-                                <input type="text" id="country"
-                                    placeholder="Country Name"
-                                    name="country" value="United States" required>
+
+                            <div class="form-row">
+                                <div class="col cymbal-form-field">
+                                    <label for="street_address">Street Address</label>
+                                    <input type="text" name="street_address"
+                                        id="street_address" value="1600 Amphitheatre Parkway" required>
+                                    <div class="checkout-validation-error">Street address is required</div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col cymbal-form-field">
+                                    <label for="zip_code">Zip Code</label>
+                                    <input type="text"
+                                        name="zip_code" id="zip_code" value="94043" required pattern="\d{4,5}">
+                                    <div class="checkout-validation-error">Please enter a valid zip code</div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col cymbal-form-field">
+                                    <label for="city">City</label>
+                                    <input type="text" name="city" id="city"
+                                        value="Mountain View" required>
+                                    <div class="checkout-validation-error">City is required</div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-md-5 cymbal-form-field">
+                                    <label for="state">State</label>
+                                    <input type="text" name="state" id="state"
+                                        value="CA" required>
+                                    <div class="checkout-validation-error">State is required</div>
+                                </div>
+                                <div class="col-md-7 cymbal-form-field">
+                                    <label for="country">Country</label>
+                                    <input type="text" id="country"
+                                        placeholder="Country Name"
+                                        name="country" value="United States" required>
+                                    <div class="checkout-validation-error">Country is required</div>
+                                </div>
+                            </div>
+
+                            <div class="checkout-nav-buttons">
+                                <div></div>
+                                <button type="button" class="checkout-btn-next">Next: Payment &rarr;</button>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col">
-                                <h3 class="payment-method-heading">Payment Method</h3>
+                        <!-- Step 2: Payment Method -->
+                        <div class="checkout-step-content" id="checkout-step-2" data-step="1">
+                            <div class="row">
+                                <div class="col">
+                                    <h3 class="payment-method-heading">Payment Method</h3>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-row">
-                            <div class="col cymbal-form-field">
-                                <label for="credit_card_number">Credit Card Number</label>
-                                <input type="text" id="credit_card_number"
-                                    name="credit_card_number"
-                                    placeholder="0000000000000000"
-                                    value="4432801561520454"
-                                    required pattern="\d{16}">
+                            <div class="form-row">
+                                <div class="col cymbal-form-field">
+                                    <label for="credit_card_number">Credit Card Number</label>
+                                    <input type="text" id="credit_card_number"
+                                        name="credit_card_number"
+                                        placeholder="0000000000000000"
+                                        value="4432801561520454"
+                                        required pattern="\d{16}">
+                                    <div class="checkout-validation-error">Please enter a valid 16-digit card number</div>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-row">
-                            <div class="col-md-5 cymbal-form-field">
-                                <label for="credit_card_expiration_month">Month</label>
-                                <select name="credit_card_expiration_month" id="credit_card_expiration_month">
-                                    <option value="1">January</option>
-                                    <option value="2">February</option>
-                                    <option value="3">March</option>
-                                    <option value="4">April</option>
-                                    <option value="5">May</option>
-                                    <option value="6">June</option>
-                                    <option value="7">July</option>
-                                    <option value="8">August</option>
-                                    <option value="9">September</option>
-                                    <option value="10">October</option>
-                                    <option value="11">November</option>
-                                    <option value="12">January</option>
-                                </select>
-                                <img src="{{ $.baseUrl }}/static/icons/Hipster_DownArrow.svg" alt="" class="cymbal-dropdown-chevron">
-                            </div>
-                            <div class="col-md-4 cymbal-form-field">
-                                    <label for="credit_card_expiration_year">Year</label>
-                                    <select name="credit_card_expiration_year" id="credit_card_expiration_year">
-                                    {{ range $i, $y := $.expiration_years}}<option value="{{$y}}"
-                                        {{if eq $i 1 -}}
-                                            selected="selected"
-                                        {{- end}}
-                                    >{{$y}}</option>{{end}}
+                            <div class="form-row">
+                                <div class="col-md-5 cymbal-form-field">
+                                    <label for="credit_card_expiration_month">Month</label>
+                                    <select name="credit_card_expiration_month" id="credit_card_expiration_month">
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">January</option>
                                     </select>
                                     <img src="{{ $.baseUrl }}/static/icons/Hipster_DownArrow.svg" alt="" class="cymbal-dropdown-chevron">
                                 </div>
-                            <div class="col-md-3 cymbal-form-field">
-                                <label for="credit_card_cvv">CVV</label>
-                                <input type="password" id="credit_card_cvv"
-                                    name="credit_card_cvv" value="672" required pattern="\d{3}">
+                                <div class="col-md-4 cymbal-form-field">
+                                    <label for="credit_card_expiration_year">Year</label>
+                                    <select name="credit_card_expiration_year" id="credit_card_expiration_year">
+                                        {{ range $i, $y := $.expiration_years}}<option value="{{$y}}"
+                                            {{if eq $i 1 -}}
+                                                selected="selected"
+                                            {{- end}}
+                                        >{{$y}}</option>{{end}}
+                                    </select>
+                                    <img src="{{ $.baseUrl }}/static/icons/Hipster_DownArrow.svg" alt="" class="cymbal-dropdown-chevron">
+                                </div>
+                                <div class="col-md-3 cymbal-form-field">
+                                    <label for="credit_card_cvv">CVV</label>
+                                    <input type="password" id="credit_card_cvv"
+                                        name="credit_card_cvv" value="672" required pattern="\d{3}">
+                                    <div class="checkout-validation-error">CVV is required</div>
+                                </div>
+                            </div>
+
+                            <div class="checkout-nav-buttons">
+                                <button type="button" class="checkout-btn-back">&larr; Back: Shipping</button>
+                                <button type="button" class="checkout-btn-next">Next: Review &rarr;</button>
                             </div>
                         </div>
 
-                        <div class="form-row justify-content-center">
-                            <div class="col text-center">
-                                <button class="cymbal-button-primary" type="submit">
+                        <!-- Step 3: Review & Place Order -->
+                        <div class="checkout-step-content" id="checkout-step-3" data-step="2">
+                            <div class="row">
+                                <div class="col">
+                                    <h3>Review Your Order</h3>
+                                </div>
+                            </div>
+
+                            <div class="checkout-review-section">
+                                <h5>Shipping Address</h5>
+                                <div id="review-shipping"></div>
+                            </div>
+
+                            <div class="checkout-review-section">
+                                <h5>Payment Method</h5>
+                                <div id="review-payment"></div>
+                            </div>
+
+                            <div class="checkout-review-section">
+                                <h5>Order Summary</h5>
+                                {{ range $.items }}
+                                <p>{{ .Item.Name }} &times; {{ .Quantity }} — {{ renderMoney .Price }}</p>
+                                {{ end }}
+                                <p><strong>Shipping:</strong> {{ renderMoney .shipping_cost }}</p>
+                                <p><strong>Total:</strong> {{ renderMoney .total_cost }}</p>
+                            </div>
+
+                            <div class="checkout-nav-buttons">
+                                <button type="button" class="checkout-btn-back">&larr; Back: Payment</button>
+                                <button class="cymbal-button-primary" type="submit" id="place-order-btn">
                                     Place Order
                                 </button>
                             </div>
