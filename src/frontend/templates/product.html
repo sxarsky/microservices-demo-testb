@@ -26,14 +26,16 @@
   <div class="h-product container">
     <div class="row">
       <div class="col-md-6">
-        <img class="product-image" id="product-image" alt="" src="{{ $.baseUrl }}{{$.product.Item.Picture}}" />
+        <img class="product-image" id="product-hero-img" alt="" src="{{ $.baseUrl }}{{$.product.Item.Picture}}" />
       </div>
       <div class="product-info col-md-5">
         <div class="product-wrapper">
 
-          <h2>{{ $.product.Item.Name }}</h2>
-          <p class="product-price">{{ renderMoney $.product.Price }}</p>
-          <p class="description">{{ $.product.Item.Description }}</p>
+          <div class="product-title-row">
+            <h2>{{ $.product.Item.Name }}</h2>
+            <span class="product-price">{{ renderMoney $.product.Price }}</span>
+          </div>
+          <div class="product-description">{{ $.product.Item.Description }}</div>
 
           {{ if $.packagingInfo }}
           <div class="product-packaging">
@@ -55,18 +57,22 @@
 
           <form method="POST" action="{{ $.baseUrl }}/cart">
             <input type="hidden" name="product_id" value="{{$.product.Item.Id}}" />
-            <div class="product-quantity-dropdown">
-              <select name="quantity" id="quantity">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-                <option>10</option>
+            <div class="product-quantity-selector">
+              <label for="quantity">Qty:</label>
+              <select name="quantity" id="quantity" class="qty-select">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
               </select>
-              <img src="{{ $.baseUrl }}/static/icons/Hipster_DownArrow.svg" alt="">
             </div>
-            <button type="submit" class="cymbal-button-primary">Add To Cart</button>
+            <button type="submit" class="cymbal-button-primary">Add to Bag</button>
           </form>
         </div>
       </div>
