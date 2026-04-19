@@ -25,7 +25,7 @@ test('testUi', async ({ page }) => {
     page.on('pageerror', (err) => errors.push(err.message));
 
     await page.goto("http://localhost:8080/product/OLJCESPC7Z");
-    await page.getByRole("button", { name: "Add To Cart" }).click();
+    await page.getByRole("button", { name: "Add to Bag" }).click();
 
     await expect(page.getByRole('heading', { name: 'Cart (1)' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Sunglasses' })).toBeVisible();
