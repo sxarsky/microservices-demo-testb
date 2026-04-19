@@ -26,14 +26,14 @@
   <div class="h-product container">
     <div class="row">
       <div class="col-md-6">
-        <img class="product-image" alt="" src="{{ $.baseUrl }}{{$.product.Item.Picture}}" />
+        <img class="product-image" id="product-image" alt="" src="{{ $.baseUrl }}{{$.product.Item.Picture}}" />
       </div>
       <div class="product-info col-md-5">
         <div class="product-wrapper">
 
           <h2>{{ $.product.Item.Name }}</h2>
           <p class="product-price">{{ renderMoney $.product.Price }}</p>
-          <p>{{ $.product.Item.Description }}</p>
+          <p class="description">{{ $.product.Item.Description }}</p>
 
           {{ if $.packagingInfo }}
           <div class="product-packaging">
@@ -72,7 +72,7 @@
       </div>
     </div>
   </div>
-  <div>
+  <div class="recommendations-section">
     {{ if $.recommendations}}
       {{ template "recommendations" $ }}
     {{ end }}
