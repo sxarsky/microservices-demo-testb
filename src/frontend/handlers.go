@@ -389,12 +389,23 @@ func (fe *frontendServer) placeOrderHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
+	// Build shipping address for email preview
+	shippingAddress := map[string]interface{}{
+		"StreetAddress": payload.StreetAddress,
+		"City":          payload.City,
+		"State":         payload.State,
+		"ZipCode":       payload.ZipCode,
+		"Country":       payload.Country,
+	}
+
 	if err := templates.ExecuteTemplate(w, "order", injectCommonTemplateData(r, map[string]interface{}{
-		"show_currency":   false,
-		"currencies":      currencies,
-		"order":           order.GetOrder(),
-		"total_paid":      &totalPaid,
-		"recommendations": recommendations,
+		"show_currency":    false,
+		"currencies":       currencies,
+		"order":            order.GetOrder(),
+		"total_paid":       &totalPaid,
+		"recommendations":  recommendations,
+		"email_address":    payload.Email,
+		"shipping_address": shippingAddress,
 	})); err != nil {
 		log.Println(err)
 	}

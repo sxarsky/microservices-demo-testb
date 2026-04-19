@@ -1,0 +1,88 @@
+<!--
+ Copyright 2020 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+{{ define "email-preview" }}
+<div class="email-preview-container" id="email-preview-container" style="display: none;">
+    <div class="email-preview-content">
+        <div class="email-header-fields">
+            <div class="email-field">
+                <strong>From:</strong> Online Boutique &lt;noreply@onlineboutique.dev&gt;
+            </div>
+            <div class="email-field">
+                <strong>To:</strong> {{ $.email_address }}
+            </div>
+            <div class="email-field">
+                <strong>Subject:</strong> Order Confirmation #{{ $.order.OrderId }}
+            </div>
+        </div>
+
+        <hr class="email-divider">
+
+        <div class="email-body">
+            <h4>Thank you for your order!</h4>
+            <p>Your order <strong>#{{ $.order.OrderId }}</strong> has been confirmed and is being processed.</p>
+
+            <h5>Order Items</h5>
+            <table class="email-items-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ range $.order.Items }}
+                    <tr>
+                        <td>{{ .Item.ProductId }}</td>
+                        <td>{{ .Item.Quantity }}</td>
+                        <td>{{ renderMoney .Cost }}</td>
+                    </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+
+            <div class="email-totals">
+                <div class="email-total-row">
+                    <span>Shipping:</span>
+                    <span>{{ renderMoney $.order.ShippingCost }}</span>
+                </div>
+                <div class="email-total-row email-grand-total">
+                    <strong>Total Paid:</strong>
+                    <strong>{{ renderMoney $.total_paid }}</strong>
+                </div>
+            </div>
+
+            <h5>Shipping Address</h5>
+            <div class="email-address">
+                <p>
+                    {{ $.shipping_address.StreetAddress }}<br>
+                    {{ $.shipping_address.City }}, {{ $.shipping_address.State }} {{ $.shipping_address.ZipCode }}<br>
+                    {{ $.shipping_address.Country }}
+                </p>
+            </div>
+
+            <div class="email-tracking">
+                <p>Tracking Number: <strong>{{ $.order.ShippingTrackingId }}</strong></p>
+            </div>
+
+            <p class="email-footer-text">
+                Thank you for shopping with Online Boutique!
+            </p>
+        </div>
+    </div>
+</div>
+{{ end }}
