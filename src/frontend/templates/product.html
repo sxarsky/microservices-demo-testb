@@ -23,6 +23,14 @@
 </div>
 
 <main role="main">
+  <div class="container">
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ $.baseUrl }}/">Home</a></li>
+        <li class="breadcrumb-item active">{{ $.product.Item.Name }}</li>
+      </ol>
+    </nav>
+  </div>
   <div class="h-product container">
     <div class="row">
       <div class="col-md-6">
