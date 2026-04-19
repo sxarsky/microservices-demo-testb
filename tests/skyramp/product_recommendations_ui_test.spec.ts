@@ -29,8 +29,8 @@ test('testUi', async ({ page }) => {
     await page.getByRole("link").nth(2).click();
 
     await expect(page.getByRole('heading', { level: 2 }).first()).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Add To Cart' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'You May Also Like' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Add to Bag' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Recommended for You' })).toBeVisible();
 
     expect(errors).toHaveLength(0);
 });

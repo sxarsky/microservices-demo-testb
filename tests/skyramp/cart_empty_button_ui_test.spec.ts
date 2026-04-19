@@ -25,7 +25,7 @@ test('testUi', async ({ page }) => {
     page.on('pageerror', (err) => errors.push(err.message));
 
     await page.goto("http://localhost:8080/product/66VCHSJNUP");
-    await page.getByRole("button", { name: "Add To Cart" }).click();
+    await page.getByRole("button", { name: "Add to Bag" }).click();
     await page.waitForLoadState('networkidle');
     await expect(page.getByTestId("cart-heading")).toContainText("Cart (1)");
     await page.getByTestId("empty-cart-btn").click();

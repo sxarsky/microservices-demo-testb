@@ -31,7 +31,7 @@ test('testUi', async ({ page }) => {
     await expect(page.getByText("Add a modern touch to your")).toContainText("Add a modern touch to your outfits with these sleek aviator sunglasses.");
     // PR adds <h3>You May Also Like</h3> but the recommendations template already has <h2>You May Also Like</h2>
     // This assertion will FAIL while the duplicate heading bug exists — expected 1 heading, got 2
-    await expect(page.getByRole('heading', { name: 'You May Also Like' })).toHaveCount(1);
+    await expect(page.getByRole('heading', { name: 'Recommended for You' })).toHaveCount(1);
 
     expect(errors).toHaveLength(0);
 });
