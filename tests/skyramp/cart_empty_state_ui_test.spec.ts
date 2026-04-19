@@ -29,6 +29,6 @@ test('testUi', async ({ page }) => {
     await page.waitForLoadState('networkidle');
 
     await expect(page.getByTestId('empty-cart')).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Your shopping cart is empty!' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'No items in your cart yet.' })).toBeVisible();
     expect(errors).toHaveLength(0);
 });
