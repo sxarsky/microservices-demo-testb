@@ -61,6 +61,29 @@
                     {{renderMoney .total_paid}}
                 </div>
             </div>
+            {{ if $.gift_message }}
+            <div class="row border-bottom-solid padding-y-24">
+                <div class="col-6 pl-md-0">
+                    Gift Message
+                </div>
+                <div class="col-6 pr-md-0 text-right" id="order-gift-message">
+                    {{ $.gift_message }}
+                </div>
+            </div>
+            {{ end }}
+
+            {{ if $.billing_address }}
+            <div class="row border-bottom-solid padding-y-24">
+                <div class="col-6 pl-md-0">
+                    Billing Address
+                </div>
+                <div class="col-6 pr-md-0 text-right" id="order-billing-address">
+                    {{ index $.billing_address "street" }}<br>
+                    {{ index $.billing_address "city" }}, {{ index $.billing_address "state" }} {{ index $.billing_address "zip" }}
+                </div>
+            </div>
+            {{ end }}
+
             <div class="row">
                 <div class="col-12 text-center">
                     <a class="cymbal-button-primary" href="{{ $.baseUrl }}/" role="button">
