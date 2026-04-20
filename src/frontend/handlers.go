@@ -180,6 +180,18 @@ func (fe *frontendServer) productHandler(w http.ResponseWriter, r *http.Request)
 		log.WithField("error", err).Warn("failed to get product recommendations")
 	}
 
+	// Store last-viewed product for "Back to product" link on cart page
+	http.SetCookie(w, &http.Cookie{
+		Name:   cookiePrefix + "last_product_id",
+		Value:  id,
+		MaxAge: cookieMaxAge,
+	})
+	http.SetCookie(w, &http.Cookie{
+		Name:   cookiePrefix + "last_product_name",
+		Value:  p.GetName(),
+		MaxAge: cookieMaxAge,
+	})
+
 	product := struct {
 		Item  *pb.Product
 		Price *pb.Money
@@ -303,15 +315,25 @@ func (fe *frontendServer) viewCartHandler(w http.ResponseWriter, r *http.Request
 	totalPrice = money.Must(money.Sum(totalPrice, *shippingCost))
 	year := time.Now().Year()
 
+	// Read last-viewed product from cookie for "Back to product" link
+	var lastViewedProduct map[string]string
+	if c, err := r.Cookie(cookiePrefix + "last_product_id"); err == nil {
+		lastViewedProduct = map[string]string{"id": c.Value}
+		if cn, err := r.Cookie(cookiePrefix + "last_product_name"); err == nil {
+			lastViewedProduct["name"] = cn.Value
+		}
+	}
+
 	if err := templates.ExecuteTemplate(w, "cart", injectCommonTemplateData(r, map[string]interface{}{
-		"currencies":       currencies,
-		"recommendations":  recommendations,
-		"cart_size":        cartSize(cart),
-		"shipping_cost":    shippingCost,
-		"show_currency":    true,
-		"total_cost":       totalPrice,
-		"items":            items,
-		"expiration_years": []int{year, year + 1, year + 2, year + 3, year + 4},
+		"currencies":          currencies,
+		"recommendations":     recommendations,
+		"cart_size":           cartSize(cart),
+		"shipping_cost":       shippingCost,
+		"show_currency":       true,
+		"total_cost":          totalPrice,
+		"items":               items,
+		"expiration_years":    []int{year, year + 1, year + 2, year + 3, year + 4},
+		"last_viewed_product": lastViewedProduct,
 	})); err != nil {
 		log.Println(err)
 	}

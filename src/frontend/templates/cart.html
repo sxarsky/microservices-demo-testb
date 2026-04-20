@@ -37,6 +37,22 @@
 
                 <div class="col-lg-6 col-xl-5 offset-xl-1 cart-summary-section">
 
+                    <div class="row mb-2">
+                        <div class="col">
+                            <nav aria-label="breadcrumb" class="breadcrumb-nav">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{{ $.baseUrl }}/">Home</a></li>
+                                    <li class="breadcrumb-item active">Cart</li>
+                                </ol>
+                            </nav>
+                            {{ if $.last_viewed_product }}
+                            <a href="{{ $.baseUrl }}/product/{{ index $.last_viewed_product "id" }}" class="back-to-product-link">
+                                Back to {{ index $.last_viewed_product "name" }}
+                            </a>
+                            {{ end }}
+                        </div>
+                    </div>
+
                     <div class="row mb-3 py-2">
                         <div class="col-4 pl-md-0">
                             <h3 data-testid="cart-heading">Cart ({{ $.cart_size }})</h3>
