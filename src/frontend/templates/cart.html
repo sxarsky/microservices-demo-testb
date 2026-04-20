@@ -73,7 +73,12 @@
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    Quantity: {{ .Quantity }}
+                                    <form method="POST" action="{{ $.baseUrl }}/cart/update" style="display: inline-flex; align-items: center; gap: 8px;">
+                                        <input type="hidden" name="product_id" value="{{ .Item.Id }}">
+                                        <button type="submit" name="action" value="decrease" class="qty-btn qty-decrease" style="padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; background: #f5f5f5;">-</button>
+                                        <span class="item-qty" style="min-width: 30px; text-align: center;">{{ .Quantity }}</span>
+                                        <button type="submit" name="action" value="increase" class="qty-btn qty-increase" style="padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; background: #f5f5f5;">+</button>
+                                    </form>
                                 </div>
                                 <div class="col pr-md-0 text-right">
                                     <strong>

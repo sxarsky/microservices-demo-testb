@@ -248,6 +248,53 @@ func (fe *frontendServer) emptyCartHandler(w http.ResponseWriter, r *http.Reques
 	w.WriteHeader(http.StatusFound)
 }
 
+func (fe *frontendServer) updateCartHandler(w http.ResponseWriter, r *http.Request) {
+	log := r.Context().Value(ctxKeyLog{}).(logrus.FieldLogger)
+	productID := r.FormValue("product_id")
+	action := r.FormValue("action")
+
+	if productID == "" || (action != "increase" && action != "decrease") {
+		renderHTTPError(log, r, w, errors.New("invalid product_id or action"), http.StatusBadRequest)
+		return
+	}
+
+	if action == "increase" {
+		log.WithField("product", productID).Debug("increasing cart quantity")
+		if err := fe.insertCart(r.Context(), sessionID(r), productID, 1); err != nil {
+			renderHTTPError(log, r, w, errors.Wrap(err, "failed to increase quantity"), http.StatusInternalServerError)
+			return
+		}
+	} else if action == "decrease" {
+		log.WithField("product", productID).Debug("decreasing cart quantity")
+		cart, err := fe.getCart(r.Context(), sessionID(r))
+		if err != nil {
+			renderHTTPError(log, r, w, errors.Wrap(err, "failed to get cart"), http.StatusInternalServerError)
+			return
+		}
+
+		if err := fe.emptyCart(r.Context(), sessionID(r)); err != nil {
+			renderHTTPError(log, r, w, errors.Wrap(err, "failed to empty cart"), http.StatusInternalServerError)
+			return
+		}
+
+		for _, item := range cart {
+			qty := item.GetQuantity()
+			if item.GetProductId() == productID {
+				qty--
+			}
+			if qty > 0 {
+				if err := fe.insertCart(r.Context(), sessionID(r), item.GetProductId(), qty); err != nil {
+					renderHTTPError(log, r, w, errors.Wrap(err, "failed to re-add cart item"), http.StatusInternalServerError)
+					return
+				}
+			}
+		}
+	}
+
+	w.Header().Set("location", baseUrl + "/cart")
+	w.WriteHeader(http.StatusFound)
+}
+
 func (fe *frontendServer) viewCartHandler(w http.ResponseWriter, r *http.Request) {
 	log := r.Context().Value(ctxKeyLog{}).(logrus.FieldLogger)
 	log.Debug("view user cart")
