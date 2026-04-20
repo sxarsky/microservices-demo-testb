@@ -107,13 +107,21 @@ func (fe *frontendServer) homeHandler(w http.ResponseWriter, r *http.Request) {
 	plat = platformDetails{}
 	plat.setPlatformDetails(strings.ToLower(env))
 
+	// Select featured products for carousel (first 4)
+	featuredCount := 4
+	if len(ps) < featuredCount {
+		featuredCount = len(ps)
+	}
+	featured := ps[:featuredCount]
+
 	if err := templates.ExecuteTemplate(w, "home", injectCommonTemplateData(r, map[string]interface{}{
-		"show_currency": true,
-		"currencies":    currencies,
-		"products":      ps,
-		"cart_size":     cartSize(cart),
-		"banner_color":  os.Getenv("BANNER_COLOR"), // illustrates canary deployments
-		"ad":            fe.chooseAd(r.Context(), []string{}, log),
+		"show_currency":     true,
+		"currencies":        currencies,
+		"products":          ps,
+		"featured_products": featured,
+		"cart_size":         cartSize(cart),
+		"banner_color":      os.Getenv("BANNER_COLOR"), // illustrates canary deployments
+		"ad":                fe.chooseAd(r.Context(), []string{}, log),
 	})); err != nil {
 		log.Error(err)
 	}
